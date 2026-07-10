@@ -28,12 +28,8 @@ In this module, you'll learn to optimize Kafka performance through producer batc
 
 ```bash
 cd ~/kafka-labs
-
-# Ensure cluster is running
 docker-compose up -d
 sleep 15
-
-# Test performance tool is available
 docker exec broker-1 kafka-producer-perf-test --help | head -5
 ```
 
@@ -68,26 +64,7 @@ docker exec broker-1 kafka-producer-perf-test --help | head -5
 
 **Task:** Measure default producer performance.
 
-```bash
-# Create test topic
-kafka-topics --create \
-  --topic perf-test \
-  --partitions 12 \
-  --replication-factor 3 \
-  --config min.insync.replicas=2
-
-# Run baseline test (defaults: 16KB batch, 0ms linger, no compression)
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 1000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=16384 \
-    linger.ms=0 \
-    compression.type=none
-```
+Covered by section "Baseline" in [`src/mod-03/lab1-producer-perf.sh`](src/mod-03/lab1-producer-perf.sh).
 
 **Expected Output:**
 ```
@@ -111,43 +88,7 @@ P99 Latency: _____ ms
 
 **Task:** Test larger batch sizes to improve throughput.
 
-```bash
-# Test 1: 32KB batches
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 1000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=32768 \
-    linger.ms=0 \
-    compression.type=none
-
-# Test 2: 64KB batches
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 1000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=65536 \
-    linger.ms=0 \
-    compression.type=none
-
-# Test 3: 128KB batches
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 1000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=131072 \
-    linger.ms=0 \
-    compression.type=none
-```
+Covered by section "Optimize Batch Size" in [`src/mod-03/lab1-producer-perf.sh`](src/mod-03/lab1-producer-perf.sh).
 
 **Record Your Results:**
 ```
@@ -169,19 +110,7 @@ Batch Size Comparison:
 
 **Task:** Allow batches to fill by waiting a few milliseconds.
 
-```bash
-# Test with 128KB batch + 10ms linger
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 1000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=131072 \
-    linger.ms=10 \
-    compression.type=none
-```
+Covered by section "Add Linger Time" in [`src/mod-03/lab1-producer-perf.sh`](src/mod-03/lab1-producer-perf.sh).
 
 **Questions to Answer:**
 1. Did throughput improve compared to 128KB batch with 0ms linger?
@@ -194,55 +123,7 @@ kafka-producer-perf-test \
 
 **Task:** Compare different compression types.
 
-```bash
-# Test 1: lz4 compression (fast, good ratio)
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 1000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=131072 \
-    linger.ms=10 \
-    compression.type=lz4
-
-# Test 2: snappy compression (very fast, moderate ratio)
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 1000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=131072 \
-    linger.ms=10 \
-    compression.type=snappy
-
-# Test 3: zstd compression (slower, best ratio)
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 1000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=131072 \
-    linger.ms=10 \
-    compression.type=zstd
-
-# Test 4: gzip compression (slowest, highest ratio)
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 1000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=131072 \
-    linger.ms=10 \
-    compression.type=gzip
-```
+Covered by section "Test Compression Algorithms" in [`src/mod-03/lab1-producer-perf.sh`](src/mod-03/lab1-producer-perf.sh).
 
 **Record Your Results:**
 ```
@@ -347,27 +228,7 @@ Safe max.poll.records: _____ (round down)
 
 **Task:** Configure consumer for low-latency, real-time processing.
 
-```bash
-# Create test topic with data
-kafka-topics --create \
-  --topic realtime-events \
-  --partitions 6 \
-  --replication-factor 3
-
-# Produce test data
-for i in {1..10000}; do echo "event-$i"; done | \
-  kafka-console-producer --topic realtime-events
-
-# Consume with real-time settings
-kafka-console-consumer \
-  --topic realtime-events \
-  --from-beginning \
-  --group realtime-consumer \
-  --max-messages 1000 \
-  --consumer-property fetch.min.bytes=1 \
-  --consumer-property fetch.max.wait.ms=100 \
-  --consumer-property max.poll.records=100
-```
+Covered by section "Consume with real-time settings" in [`src/mod-03/lab2-consumer-fetch.sh`](src/mod-03/lab2-consumer-fetch.sh).
 
 **Configuration Explanation:**
 - `fetch.min.bytes=1`: Don't wait for data, return immediately
@@ -382,20 +243,7 @@ kafka-console-consumer \
 
 **Task:** Configure consumer for batch processing, high efficiency.
 
-```bash
-# Delete previous consumer group
-kafka-consumer-groups --delete --group batch-consumer 2>/dev/null || true
-
-# Consume with batch settings
-kafka-console-consumer \
-  --topic realtime-events \
-  --from-beginning \
-  --group batch-consumer \
-  --max-messages 1000 \
-  --consumer-property fetch.min.bytes=102400 \
-  --consumer-property fetch.max.wait.ms=500 \
-  --consumer-property max.poll.records=1000
-```
+Covered by section "Consume with high-throughput settings" in [`src/mod-03/lab2-consumer-fetch.sh`](src/mod-03/lab2-consumer-fetch.sh).
 
 **Configuration Explanation:**
 - `fetch.min.bytes=102400` (100KB): Wait for substantial data
@@ -471,14 +319,7 @@ kafka-console-consumer \
 
 **Task:** Check your broker's current settings.
 
-```bash
-# View broker configurations
-docker exec broker-1 kafka-configs \
-  --bootstrap-server broker-1:29092 \
-  --entity-type brokers \
-  --entity-name 1 \
-  --describe --all | grep -E "num.network.threads|num.io.threads|socket"
-```
+Covered by section "View current broker configuration" in [`src/mod-03/lab3-broker-tuning.sh`](src/mod-03/lab3-broker-tuning.sh).
 
 **Default Values (typical):**
 ```
@@ -529,19 +370,7 @@ socket.receive.buffer.bytes = 102400 (100KB) [default]
 
 **Task:** Establish baseline with current broker config.
 
-```bash
-# Run performance test
-kafka-producer-perf-test \
-  --topic perf-test \
-  --num-records 5000000 \
-  --record-size 1024 \
-  --throughput -1 \
-  --producer-props \
-    acks=all \
-    batch.size=131072 \
-    linger.ms=10 \
-    compression.type=lz4
-```
+Covered by section "Performance test with current settings" in [`src/mod-03/lab3-broker-tuning.sh`](src/mod-03/lab3-broker-tuning.sh).
 
 **Record Your Results:**
 ```
@@ -592,19 +421,7 @@ Total Improvement: _____% (typical: 300-500%)
 After completing all exercises:
 
 ```bash
-# Stop background processes
-pkill -f kafka-console-consumer
-pkill -f kafka-console-producer
-
-# Delete test consumer groups
-kafka-consumer-groups --delete --group realtime-consumer 2>/dev/null || true
-kafka-consumer-groups --delete --group batch-consumer 2>/dev/null || true
-
-# Optionally delete test topics
-kafka-topics --delete --topic perf-test 2>/dev/null || true
-kafka-topics --delete --topic realtime-events 2>/dev/null || true
-
-echo "✅ Module 3 labs complete!"
+bash src/mod-03/cleanup.sh
 ```
 
 ---

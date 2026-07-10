@@ -1,0 +1,56 @@
+# Prometheus Alert Rules for Kafka Monitoring
+
+groups:
+  - name: kafka_alerts
+    interval: 30s
+    rules:
+
+      # Critical: Under-Replicated Partitions
+      - alert: KafkaUnderReplicatedPartitions
+        expr: kafka_server_replicamanager_underreplicatedpartitions > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Kafka has {{ $value }} under-replicated partitions"
+          description: "Some partitions don't have full replicas. Risk of data loss if another broker fails."
+
+      # Warning: High Disk Usage
+      - alert: KafkaDiskUsageHigh
+        expr: (kafka_log_size_bytes / kafka_disk_total_bytes) > 0.75
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Kafka disk usage is {{ $value | humanizePercentage }}"
+          description: "Consider increasing retention cleanup frequency or adding more disk space."
+
+      # Critical: Very High Disk Usage
+      - alert: KafkaDiskUsageCritical
+        expr: (kafka_log_size_bytes / kafka_disk_total_bytes) > 0.85
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Kafka disk usage is {{ $value | humanizePercentage }}"
+          description: "Urgent: Add disk space or reduce retention immediately."
+
+      # Warning: High Consumer Lag
+      - alert: KafkaConsumerLagHigh
+        expr: kafka_consumer_lag > 5000
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Consumer group {{ $labels.group }} has lag of {{ $value }} messages"
+          description: "Consumer is falling behind. Consider scaling the consumer group."
+
+      # Critical: CPU Usage High
+      - alert: KafkaBrokerCPUHigh
+        expr: kafka_broker_cpu_usage > 0.75
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Broker {{ $labels.broker }} CPU at {{ $value | humanizePercentage }}"
+          description: "Consider horizontal scaling or config tuning."

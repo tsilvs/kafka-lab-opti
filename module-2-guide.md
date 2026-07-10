@@ -27,12 +27,8 @@ In this module, you'll learn to monitor Kafka performance by tracking consumer l
 
 ```bash
 cd ~/kafka-labs
-
-# Start cluster if not running
 docker-compose up -d
 sleep 30
-
-# Verify
 kafka-topics --list
 ```
 
@@ -63,34 +59,7 @@ If you need to set up from scratch, refer to Module 1 Student Guide.
 
 **Task:** Set up a realistic scenario where consumers fall behind.
 
-```bash
-# Create topic
-kafka-topics --create \
-  --topic order-events \
-  --partitions 12 \
-  --replication-factor 3 \
-  --config min.insync.replicas=2
-
-# Produce 5,000 messages quickly
-for i in {1..5000}; do 
-  echo "order-$i"
-done | kafka-console-producer --topic order-events
-
-# Start ONE slow consumer (will fall behind)
-kafka-console-consumer \
-  --topic order-events \
-  --group order-processor \
-  --from-beginning &
-
-# Get the process ID
-CONSUMER_PID=$!
-
-# Keep producing to build lag
-for i in {5001..10000}; do 
-  echo "order-$i"
-  sleep 0.05  # Produce faster than consumer can keep up
-done | kafka-console-producer --topic order-events &
-```
+Covered by [`src/mod-02/lab1-consumer-lag.sh`](src/mod-02/lab1-consumer-lag.sh) (creates topic, produces 5K messages, starts slow consumer, keeps producing to build lag).
 
 ---
 
@@ -195,36 +164,7 @@ Optimal Consumers: Number of partitions (if ≥ 10)
 
 **Task:** Demonstrate what happens when you have too few consumers.
 
-```bash
-# Create topic with 12 partitions
-kafka-topics --create \
-  --topic inventory-updates \
-  --partitions 12 \
-  --replication-factor 3
-
-# Produce test data
-for i in {1..10000}; do echo "inventory-$i"; done | \
-  kafka-console-producer --topic inventory-updates
-
-# Start only 2 consumers (undersized for 12 partitions)
-kafka-console-consumer \
-  --topic inventory-updates \
-  --group inventory-sync \
-  --from-beginning > /dev/null 2>&1 &
-
-kafka-console-consumer \
-  --topic inventory-updates \
-  --group inventory-sync \
-  --from-beginning > /dev/null 2>&1 &
-
-# Wait for rebalance
-sleep 5
-
-# Check member assignment
-kafka-consumer-groups --describe \
-  --group inventory-sync \
-  --members --verbose
-```
+Covered by [`src/mod-02/lab2-undersized-group.sh`](src/mod-02/lab2-undersized-group.sh) (creates 12-partition topic, produces 10K messages, starts 2 consumers, shows member assignment).
 
 **Expected Output:**
 ```
@@ -271,30 +211,7 @@ Answer: You need ___ consumers for optimal performance.
 
 **Task:** See what happens with too many consumers.
 
-```bash
-# Stop previous consumers
-pkill -f kafka-console-consumer
-
-# Delete consumer group to start fresh
-kafka-consumer-groups --delete --group test-oversized 2>/dev/null || true
-sleep 2
-
-# Start 20 consumers for a 12-partition topic
-for i in {1..20}; do
-  kafka-console-consumer \
-    --topic inventory-updates \
-    --group test-oversized \
-    --from-beginning > /dev/null 2>&1 &
-done
-
-# Wait for rebalance
-sleep 10
-
-# Check assignment
-kafka-consumer-groups --describe \
-  --group test-oversized \
-  --members | head -25
-```
+Covered by [`src/mod-02/lab2-oversized-group.sh`](src/mod-02/lab2-oversized-group.sh) (stops previous consumers, starts 20 consumers for 12 partitions, shows idle members).
 
 **Expected Output:**
 ```
@@ -401,32 +318,7 @@ done
 
 **Task:** See how the cluster responds to a broker failure.
 
-```bash
-# First, create a test topic
-kafka-topics --create \
-  --topic health-test \
-  --partitions 9 \
-  --replication-factor 3
-
-# Produce some test data
-for i in {1..1000}; do echo "message-$i"; done | \
-  kafka-console-producer --topic health-test
-
-# Check initial state
-echo "=== Before Failure ==="
-kafka-topics --describe --topic health-test
-
-# Stop broker-2
-docker stop broker-2
-
-# Wait for cluster to detect failure
-echo "Waiting 10 seconds for cluster to detect failure..."
-sleep 10
-
-# Check for under-replicated partitions
-echo "=== After Failure ==="
-kafka-topics --describe --under-replicated-partitions
-```
+Covered by [`src/mod-02/lab3-simulate-failure.sh`](src/mod-02/lab3-simulate-failure.sh) (creates test topic, produces data, stops broker-2, shows under-replicated partitions).
 
 **Expected Output:**
 You should see partitions that had Broker 2 as a replica showing as under-replicated.
@@ -442,23 +334,7 @@ You should see partitions that had Broker 2 as a replica showing as under-replic
 
 **Task:** Watch the cluster automatically recover.
 
-```bash
-# Restart broker-2
-docker start broker-2
-
-# Wait for it to rejoin
-echo "Waiting for broker-2 to rejoin cluster..."
-sleep 15
-
-# Check if under-replicated partitions are gone
-echo "=== After Recovery ==="
-kafka-topics --describe --under-replicated-partitions
-
-# Should be empty again - cluster self-healed!
-
-# Verify all partitions are healthy
-kafka-topics --describe --topic health-test | grep -E "Partition|Isr"
-```
+Covered by [`src/mod-02/lab3-observe-recovery.sh`](src/mod-02/lab3-observe-recovery.sh) (restarts broker-2, verifies under-replicated partitions are gone, checks ISR health).
 
 **Questions to Answer:**
 1. How long did self-healing take?
@@ -471,66 +347,7 @@ kafka-topics --describe --topic health-test | grep -E "Partition|Isr"
 
 **Task:** Define alert thresholds for your system.
 
-Create a file called `kafka-alerts.yml`:
-
-```yaml
-# Prometheus Alert Rules for Kafka Monitoring
-
-groups:
-  - name: kafka_alerts
-    interval: 30s
-    rules:
-    
-      # Critical: Under-Replicated Partitions
-      - alert: KafkaUnderReplicatedPartitions
-        expr: kafka_server_replicamanager_underreplicatedpartitions > 0
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Kafka has {{ $value }} under-replicated partitions"
-          description: "Some partitions don't have full replicas. Risk of data loss if another broker fails."
-          
-      # Warning: High Disk Usage
-      - alert: KafkaDiskUsageHigh
-        expr: (kafka_log_size_bytes / kafka_disk_total_bytes) > 0.75
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Kafka disk usage is {{ $value | humanizePercentage }}"
-          description: "Consider increasing retention cleanup frequency or adding more disk space."
-          
-      # Critical: Very High Disk Usage
-      - alert: KafkaDiskUsageCritical
-        expr: (kafka_log_size_bytes / kafka_disk_total_bytes) > 0.85
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Kafka disk usage is {{ $value | humanizePercentage }}"
-          description: "Urgent: Add disk space or reduce retention immediately."
-          
-      # Warning: High Consumer Lag
-      - alert: KafkaConsumerLagHigh
-        expr: kafka_consumer_lag > 5000
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Consumer group {{ $labels.group }} has lag of {{ $value }} messages"
-          description: "Consumer is falling behind. Consider scaling the consumer group."
-          
-      # Critical: CPU Usage High
-      - alert: KafkaBrokerCPUHigh
-        expr: kafka_broker_cpu_usage > 0.75
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "Broker {{ $labels.broker }} CPU at {{ $value | humanizePercentage }}"
-          description: "Consider horizontal scaling or config tuning."
-```
+Create a file called `kafka-alerts.yml` using the rules at [`src/mod-02/kafka-alerts.yml`](src/mod-02/kafka-alerts.yml).
 
 **Questions to Answer:**
 1. What's your threshold for alerting on consumer lag?
@@ -554,22 +371,7 @@ groups:
 After completing all exercises:
 
 ```bash
-# Stop all background processes
-pkill -f kafka-console-consumer
-pkill -f kafka-console-producer
-
-# Delete test consumer groups
-kafka-consumer-groups --delete --group order-processor 2>/dev/null || true
-kafka-consumer-groups --delete --group inventory-sync 2>/dev/null || true
-kafka-consumer-groups --delete --group test-oversized 2>/dev/null || true
-
-# Optionally delete test topics
-kafka-topics --delete --topic order-events 2>/dev/null || true
-kafka-topics --delete --topic inventory-updates 2>/dev/null || true
-kafka-topics --delete --topic health-test 2>/dev/null || true
-
-# Ensure all brokers are running for next module
-docker start broker-1 broker-2 broker-3
+bash src/mod-02/cleanup.sh
 ```
 
 ---
