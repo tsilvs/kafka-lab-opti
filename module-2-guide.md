@@ -13,7 +13,7 @@ In this module, you'll learn to monitor Kafka performance by tracking consumer l
 - Diagnose performance bottlenecks using broker health indicators
 - Set up alerting for critical metrics
 
-**Estimated Time:** 60 minutes (including videos and hands-on practice)
+**Estimated Time:** 60 minutes of hands-on practice
 
 ---
 

@@ -1,30 +1,24 @@
 # Kafka Performance Optimization - Lab Guides
-**Hands-On Labs for "Optimize Kafka for Speed & Availability" Course**
+
+> Hands-On Labs for Apache Kafka Performance & Availability
 
 ---
 
 ## 📚 Overview
 
-This repository contains three comprehensive lab guides designed to accompany the "Optimize Kafka for Speed & Availability" video course. Through hands-on exercises, you'll learn to configure, monitor, and optimize Apache Kafka clusters for production use.
+Three lab guides covering configuration, monitoring, and optimization of Apache Kafka clusters for production use.
 
 **Total Time:** ~3 hours of hands-on practice  
 **Prerequisites:** Basic familiarity with command-line terminals and Docker  
-**Tools Required:** Docker Desktop (8GB+ RAM recommended)
+**Tools Required:** Docker Desktop (8GB+ RAM recommended)  
 
 ---
 
 ## 📋 Quick Access
 
-### **[Command Reference - All Videos](command-reference.md)** 🔥
-**New!** Complete command-line reference for all 9 video demonstrations. Every command shown in the course with explanations.
+### **[Command Reference](command-reference.md)** 🔥
 
-**Perfect for:**
-- Following along during videos
-- Quick copy-paste reference  
-- Reviewing after watching
-- Understanding command options
-
-**Includes:** 50+ commands organized by video, cleanup procedures, common patterns, and troubleshooting tips.
+Complete command-line reference for every exercise across all three modules, organized by module and topic — commands, purpose, and expected result.
 
 **[→ View Command Reference](command-reference.md)**
 
@@ -33,59 +27,36 @@ This repository contains three comprehensive lab guides designed to accompany th
 ## 🎯 Learning Path
 
 ### **[Module 1: Configure Topics for High Availability](module-1-guide.md)**
+
 📊 **Difficulty:** Beginner
 
-Learn to configure Kafka topics with appropriate replication factors, partition counts, and durability settings to ensure high availability and fault tolerance.
+Configure Kafka topics with replication factors, partition counts, and durability settings for high availability and fault tolerance.
 
-**What You'll Learn:**
-- Create topics with replication for zero-downtime during failures
-- Calculate optimal partition counts based on throughput requirements
-- Apply production configuration patterns for different use cases
-
-**Labs Included:**
-- Lab 1: Replication Factors and Data Durability
-- Lab 2: Partition Strategy for Parallelism
-- Lab 3: Topic Configuration Best Practices
+**Labs:** Replication Factors and Data Durability · Partition Strategy for Parallelism · Topic Configuration Best Practices
 
 **[Start Module 1 →](module-1-guide.md)**
 
 ---
 
 ### **[Module 2: Monitor Performance and Identify Bottlenecks](module-2-guide.md)**
+
 📊 **Difficulty:** Intermediate
 
-Master consumer lag monitoring, consumer group sizing, and broker health metrics to identify and diagnose performance bottlenecks before they impact production.
+Consumer lag monitoring, consumer group sizing, and broker health metrics to diagnose bottlenecks before they hit production.
 
-**What You'll Learn:**
-- Monitor and interpret consumer lag metrics
-- Calculate optimal consumer group sizes based on partition count
-- Diagnose performance bottlenecks using broker health indicators
-- Set up alerting for critical metrics
-
-**Labs Included:**
-- Lab 1: Understanding Consumer Lag
-- Lab 2: Consumer Group Sizing and Parallelism
-- Lab 3: Broker Health Monitoring
+**Labs:** Understanding Consumer Lag · Consumer Group Sizing and Parallelism · Broker Health Monitoring
 
 **[Start Module 2 →](module-2-guide.md)**
 
 ---
 
 ### **[Module 3: Optimize Producer and Consumer Performance](module-3-guide.md)**
+
 📊 **Difficulty:** Advanced
 
-Optimize Kafka performance through producer batching, compression, consumer fetch tuning, and broker-side configuration to maximize throughput while meeting latency SLAs.
+Producer batching, compression, consumer fetch tuning, and broker-side configuration to maximize throughput within latency SLAs.
 
-**What You'll Learn:**
-- Optimize producer configurations for maximum throughput
-- Compare compression algorithms and select the best for your use case
-- Tune consumer fetch settings to prevent timeouts
-- Understand broker-side threading and buffer configurations
-
-**Labs Included:**
-- Lab 1: Producer Batching and Compression
-- Lab 2: Consumer Fetch Optimization
-- Lab 3: Broker-Side Performance Tuning
+**Labs:** Producer Batching and Compression · Consumer Fetch Optimization · Broker-Side Performance Tuning
 
 **[Start Module 3 →](module-3-guide.md)**
 
@@ -107,74 +78,37 @@ Optimize Kafka performance through producer batching, compression, consumer fetc
 
 ### Set Up Your Lab Environment
 
-Each module guide includes detailed setup instructions. Here's the quick version:
-
 ```bash
-# Create working directory
-mkdir -p ~/kafka-labs
-cd ~/kafka-labs
-
-# Download docker-compose.yml from Module 1 guide
-# (Full instructions in module-1-guide.md)
-
-# Start Kafka cluster
-docker-compose up -d
-
-# Wait for cluster to start
-sleep 60
-
-# Verify it's running
-docker-compose ps
+bash src/mod-01/setup.sh
 ```
 
-**Detailed setup instructions** are provided in [Module 1](module-1-guide.md#lab-environment-setup).
+This creates `~/kafka-labs`, copies the cluster definition ([`src/mod-01/docker-compose.yml`](src/mod-01/docker-compose.yml)), starts the 3-broker cluster, and verifies it's reachable. Full walkthrough in [Module 1](module-1-guide.md#lab-environment-setup).
 
 ---
 
 ## 📖 How to Use These Guides
 
-### Study Approach
+1. **Read "Key Concepts"** in the module guide
+2. **Run the lab scripts** under `src/mod-0N/` for each exercise
+3. **Answer the "Questions to Answer"** using the command output
+4. **Use the [Command Reference](command-reference.md)** for quick copy-paste lookups
+5. **Complete the quiz** at the end of each module
 
-**Option 1: Video-First Learning**
-1. **Watch the video** for the module
-2. **Open [Command Reference](command-reference.md)** to see exact commands
-3. **Follow along** by copying commands to your terminal
-4. **Read the module lab guide** for deeper exercises
-5. **Complete the quiz** to test your understanding
-
-**Option 2: Lab-First Learning**
-1. **Read the "Key Concepts"** section in the module guide
-2. **Work through each lab exercise** hands-on
-3. **Watch the video** to see instructor demonstrations
-4. **Use [Command Reference](command-reference.md)** to review specific commands
-5. **Complete the quiz**
-
-**Pro Tip:** Keep the [Command Reference](command-reference.md) open in a second window/tab while watching videos for easy copy-paste!
-
-### Lab Format
-
-Each lab includes:
-- 🎯 **Learning objectives** - What you'll master
-- 💡 **Key concepts** - Theory explained simply
-- ⚙️ **Hands-on exercises** - Step-by-step commands
-- ❓ **Questions to answer** - Test your understanding
-- ✅ **Key takeaways** - Remember these!
+Each lab includes: 🎯 objectives, 💡 key concepts, ⚙️ hands-on exercises, ❓ questions to answer, ✅ key takeaways.
 
 ---
 
 ## 🛠️ What You'll Build
 
-By the end of these labs, you'll have:
+- ✅ 3-broker Kafka cluster with Docker
+- ✅ Production-ready topics with replication and partitioning
+- ✅ Consumer lag and broker health monitoring
+- ✅ Correctly sized consumer groups
+- ✅ 3-5x producer throughput via batching and compression
+- ✅ Tuned consumer fetch settings
+- ✅ Monitoring/alerting rules
 
-- ✅ Configured a 3-broker Kafka cluster with Docker
-- ✅ Created production-ready topics with replication and partitioning
-- ✅ Monitored consumer lag and broker health
-- ✅ Sized consumer groups for optimal parallelism
-- ✅ Optimized producer throughput by 3-5x through batching and compression
-- ✅ Tuned consumer fetch settings to prevent timeouts
-- ✅ Set up monitoring and alerting rules
-
-**Final Project:** Build and optimize a complete Kafka system for an e-commerce platform processing 100,000 orders/day.
+**Final Project:** Optimize a complete Kafka system for an e-commerce platform processing 100,000 orders/day.
 
 ---
 
@@ -185,34 +119,18 @@ Module 1: Configure     →  Module 2: Monitor      →  Module 3: Optimize
 ├─ Replication          →  ├─ Consumer lag        →  ├─ Producer batching
 ├─ Partitions           →  ├─ Consumer groups     →  ├─ Compression
 └─ Topic configs        →  └─ Broker health       →  └─ Fetch tuning
-                                                      
+
 Beginner                   Intermediate              Advanced
 ```
 
 ---
 
-## 🎓 Learning Outcomes
-
-After completing all three modules, you will be able to:
-
-1. **Configure** Kafka topics with appropriate replication factors, partition counts, and durability settings
-2. **Monitor** consumer lag, broker health, and identify performance bottlenecks
-3. **Optimize** producer and consumer configurations for maximum throughput while meeting latency SLAs
-4. **Design** production-ready Kafka architectures that balance availability, performance, and cost
-5. **Troubleshoot** common Kafka performance issues using metrics and diagnostic tools
-
----
-
 ## 💼 Real-World Applications
-
-These skills are used by:
 
 - **Netflix** - 700+ billion events/day using 36 Kafka clusters
 - **LinkedIn** - 7+ trillion messages/day through 100+ clusters
-- **Uber** - Real-time dispatch and surge pricing optimization
-- **Walmart** - 100 million SKUs/day inventory synchronization
-
-**Learn more:** Case studies and examples are included throughout the guides.
+- **Uber** - Real-time dispatch and surge pricing
+- **Walmart** - 100 million SKUs/day inventory sync
 
 ---
 
@@ -220,9 +138,9 @@ These skills are used by:
 
 ### What's Included
 
-- **3-broker Kafka cluster** (using Confluent Platform 7.5.0)
+- **3-broker Kafka cluster** (Confluent Platform 7.5.0)
 - **Zookeeper** for coordination
-- **Command-line tools** for topic management, producers, consumers
+- **Command-line tools** for topics, producers, consumers
 - **Performance testing tools** (`kafka-producer-perf-test`)
 
 ### Architecture
@@ -237,25 +155,40 @@ These skills are used by:
 │  └──────────┘  └──────────┘  └──────────┘
 │       │             │             │        
 │  ┌────────────────────────────────────┐  
-│  │        Zookeeper :2181            │  
+│  │   KRaft controller quorum :29093   │  
+│  │   (runs inside the brokers)        │  
 │  └────────────────────────────────────┘  
 └─────────────────────────────────────────┘
 ```
+
+### Lab Scripts
+
+All non-interactive setup commands live under [`src/`](src/), one directory per module:
+
+- [`src/kafka-env.sh`](src/kafka-env.sh) - shared CLI wrapper functions
+- [`src/mod-01/`](src/mod-01/) - cluster setup, replication, partitions, config patterns
+- [`src/mod-02/`](src/mod-02/) - consumer lag, group sizing, broker health
+- [`src/mod-03/`](src/mod-03/) - producer/consumer/broker performance tuning
+
+Each module directory has its own `cleanup.sh`.
 
 ---
 
 ## 📚 Additional Resources
 
 ### Official Documentation
+
 - [Apache Kafka Documentation](https://kafka.apache.org/documentation/)
 - [Confluent Platform Documentation](https://docs.confluent.io/)
 
 ### Performance Guides
+
 - [Kafka Performance Tuning](https://www.redpanda.com/guides/kafka-performance-kafka-performance-tuning)
 - [Consumer Lag Monitoring](https://docs.confluent.io/platform/current/monitor/monitor-consumer-lag.html)
 - [Partition Strategies](https://www.confluent.io/blog/how-choose-number-topics-partitions-kafka-cluster/)
 
 ### Community
+
 - [Kafka Users Mailing List](https://kafka.apache.org/contact)
 - [Confluent Community Slack](https://launchpass.com/confluentcommunity)
 - [Stack Overflow: apache-kafka](https://stackoverflow.com/questions/tagged/apache-kafka)
@@ -264,21 +197,11 @@ These skills are used by:
 
 ## 🤝 Contributing
 
-Found an issue or have a suggestion? 
+Found an issue or have a suggestion?
 
 - **Report bugs:** Open an issue describing the problem
 - **Suggest improvements:** Open an issue with your idea
 - **Fix typos:** Submit a pull request
-
----
-
-## 📝 Course Information
-
-These lab guides accompany the **"Optimize Kafka for Speed & Availability"** course.
-
-- **Level:** Intermediate
-- **Instructor:** [Ritesh Vajariya]
-- **Prerequisites:** Basic understanding of distributed systems and command-line usage
 
 ---
 
@@ -290,41 +213,16 @@ Apache Kafka and related trademarks are property of the Apache Software Foundati
 
 ---
 
-## 🎯 Getting Started
-
-Ready to begin? Start with Module 1:
-
-**[→ Begin Module 1: Configure Topics for High Availability](module-1-guide.md)**
-
----
-
-## 📞 Support
-
-**Need help?**
-- Review the troubleshooting sections in each module guide
-- Check the [Additional Resources](#additional-resources) section
-- Ask questions in the course discussion forum
-
----
-
 ## ✅ Module Completion Checklist
 
-Track your progress:
-
-- [ ] **Module 1:** Configured topics with replication and partitioning
-- [ ] **Module 1:** Passed quiz (4/5 correct)
-- [ ] **Module 2:** Monitored consumer lag and sized consumer groups
-- [ ] **Module 2:** Passed quiz (4/5 correct)
-- [ ] **Module 3:** Optimized producer and consumer performance
-- [ ] **Module 3:** Passed quiz (4/5 correct)
+- [ ] **Module 1:** Configured topics with replication and partitioning, passed quiz (4/5 correct)
+- [ ] **Module 2:** Monitored consumer lag and sized consumer groups, passed quiz (4/5 correct)
+- [ ] **Module 3:** Optimized producer and consumer performance, passed quiz (4/5 correct)
 - [ ] **Final Project:** Built complete e-commerce Kafka system
-- [ ] **Certification:** Ready to earn your Kafka certification!
 
 ---
 
 ## 🚀 What's Next?
-
-After completing these labs:
 
 1. **Apply to real projects** - Use Kafka in your applications
 2. **Explore advanced topics** - Kafka Streams, ksqlDB, Schema Registry

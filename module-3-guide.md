@@ -13,7 +13,7 @@ In this module, you'll learn to optimize Kafka performance through producer batc
 - Tune consumer fetch settings to prevent timeouts and rebalancing
 - Understand broker-side threading and buffer configurations
 
-**Estimated Time:** 90 minutes (including videos and hands-on practice)
+**Estimated Time:** 90 minutes of hands-on practice
 
 ---
 
@@ -491,11 +491,11 @@ Test your understanding:
 - [ ] Completed Lab 3: Broker-Side Tuning
 - [ ] Achieved 3x+ throughput improvement
 - [ ] Passed Module 3 Quiz (4/5 correct minimum)
-- [ ] Ready for course-end project
+- [ ] Ready for the final project
 
 ---
 
-## 🎓 Course Project: Real-World Optimization
+## 🎓 Final Project: Real-World Optimization
 
 Now that you've completed all three modules, apply everything you've learned:
 
@@ -519,7 +519,7 @@ Now that you've completed all three modules, apply everything you've learned:
 You now have the skills to design, monitor, and optimize production Kafka systems. You've learned to balance throughput, latency, durability, and cost - the key trade-offs in distributed systems engineering.
 
 **Next Steps:**
-- Complete the course-end project
+- Complete the final project
 - Build your own Kafka application
 - Earn your Kafka certification
 - Join the Kafka community!

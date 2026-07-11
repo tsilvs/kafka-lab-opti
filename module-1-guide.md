@@ -15,7 +15,7 @@ In this module, you'll learn to configure Apache Kafka topics for high availabil
 - Calculate partition counts based on throughput requirements
 - Apply production configuration patterns for different use cases
 
-**Estimated Time:** 60 minutes (including videos and hands-on practice)
+**Estimated Time:** 60 minutes of hands-on practice
 
 ---
 
@@ -55,7 +55,7 @@ source ~/.zshrc  # or source ~/.bash_profile
 ```bash
 # Check containers are running
 docker-compose ps
-# You should see: zookeeper, broker-1, broker-2, broker-3 all "Up"
+# You should see: broker-1, broker-2, broker-3 all "Up"
 
 # Test Kafka commands
 kafka-topics --list

@@ -1,11 +1,11 @@
-# Kafka Command Reference - All Video Demonstrations
-**Complete command-line reference for all 9 course videos**
+# Kafka Command Reference
+**Complete command-line reference for every lab exercise**
 
 ---
 
 ## 📖 Overview
 
-This guide contains every command demonstrated in the course videos, organized by module and video. Use this as a quick reference while watching the videos or when you want to reproduce the demonstrations on your own.
+This guide contains every command used across the lab modules, organized by module and topic. Use this as a quick reference while working through the labs.
 
 **Format:** Command → Brief explanation → Expected result
 
@@ -13,7 +13,7 @@ This guide contains every command demonstrated in the course videos, organized b
 
 ## 🔧 Initial Setup (One-Time)
 
-Before running any commands from the videos, set up your environment:
+Before running any commands below, set up your environment:
 
 ```bash
 # Create working directory
@@ -36,13 +36,13 @@ alias kafka-producer-perf='docker exec broker-1 kafka-producer-perf-test --boots
 
 ## 📦 Module 1: Configure Topics for High Availability
 
-### Video 1: Replication Factors and Data Durability (3 min)
+### Replication Factors and Data Durability
 
 #### Check Cluster Status
 ```bash
 docker-compose ps
 ```
-**Purpose:** Verify all 3 brokers and zookeeper are running  
+**Purpose:** Verify all 3 brokers are running  
 **Expected:** All containers show status "Up"
 
 ---
@@ -146,7 +146,7 @@ kafka-topics --describe --topic orders-safe | grep "Partition: 0"
 
 ---
 
-### Video 2: Partition Strategy for Parallelism (2 min)
+### Partition Strategy for Parallelism
 
 #### Calculate Optimal Partitions
 ```
@@ -200,7 +200,7 @@ kafka-console-consumer --topic high-throughput-events \
 
 ---
 
-### Video 3: Topic Configuration Best Practices (2 min)
+### Topic Configuration Best Practices
 
 #### Pattern 1: Analytics Topic (Time-Series)
 ```bash
@@ -267,7 +267,7 @@ kafka-configs --describe \
 
 ## 📊 Module 2: Monitor Performance and Identify Bottlenecks
 
-### Video 1: Understanding Consumer Lag (2 min)
+### Understanding Consumer Lag
 
 #### Check Consumer Group Status
 ```bash
@@ -290,7 +290,7 @@ kafka-consumer-groups --describe \
 
 ---
 
-### Video 2: Consumer Group Sizing (2 min)
+### Consumer Group Sizing
 
 #### Inspect Consumer Group Members
 ```bash
@@ -325,7 +325,7 @@ kafka-consumer-groups --describe \
 
 ---
 
-### Video 3: Broker Health Monitoring (1.5 min)
+### Broker Health Monitoring
 
 #### Check for Under-Replicated Partitions (Healthy)
 ```bash
@@ -369,7 +369,7 @@ kafka-topics --describe --under-replicated-partitions
 
 ## ⚡ Module 3: Optimize Producer and Consumer Performance
 
-### Video 1: Producer Batching and Compression (2 min)
+### Producer Batching and Compression
 
 #### Baseline Performance Test (Defaults)
 ```bash
@@ -422,7 +422,7 @@ kafka-producer-perf-test \
 
 ---
 
-### Video 2: Consumer Fetch Optimization (2 min)
+### Consumer Fetch Optimization
 
 #### Consume with Real-Time Settings
 ```bash
@@ -456,7 +456,7 @@ kafka-console-consumer \
 
 ---
 
-### Video 3: Broker-Side Performance Tuning (1.5 min)
+### Broker-Side Performance Tuning
 
 #### View Current Broker Configuration
 ```bash
@@ -484,7 +484,7 @@ kafka-producer-perf-test \
     compression.type=lz4
 ```
 **Purpose:** Baseline with default broker settings  
-**Note:** Broker tuning requires restart (not shown in video)
+**Note:** Broker tuning requires restart (out of scope for this lab)
 
 ---
 
@@ -652,5 +652,4 @@ watch -n 2 "kafka-consumer-groups --describe --group MY-GROUP"
 ---
 
 **Last Updated:** November 2024  
-**Course:** Optimize Kafka for Speed & Availability  
-**Total Commands:** 50+ across 9 videos
+**Total Commands:** 50+ across 9 sections

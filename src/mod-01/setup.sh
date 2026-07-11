@@ -13,6 +13,9 @@ cd ~/kafka-labs
 cp "$SCRIPT_DIR/docker-compose.yml" .
 
 # --- Start the cluster ---
+# KRaft needs freshly formatted storage: remove any leftover containers
+# (e.g. from an older ZooKeeper-mode cluster) before the first boot.
+docker-compose down --remove-orphans 2>/dev/null || true
 docker-compose up -d
 
 # --- Wait for cluster to start (this takes about 60 seconds) ---
