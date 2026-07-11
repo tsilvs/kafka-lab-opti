@@ -6,8 +6,9 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # --- Create working directory ---
-mkdir -p ~/kafka-labs
-cd ~/kafka-labs
+# TODO: Replace with a more specific path or prompt user to give one via CLI param
+mkdir -p ~/Documents/mbrok/kafka/learn/practice/kafka-labs && cd $_
+# mkdir -p /mnt/data/myrepo/tsilvs/kafka-labs && cd $_
 
 # --- Copy the cluster definition into place ---
 cp "$SCRIPT_DIR/docker-compose.yml" .

@@ -88,7 +88,7 @@ kafka-topics --list
 
 **Task:** Create two topics to compare replication behavior.
 
-Covered by [`src/mod-01/lab1-replication.sh`](src/mod-01/lab1-replication.sh) (creates both topics, verifies config).
+Covered by [`src/mod-01/lab1/replication.sh`](src/mod-01/lab1/replication.sh) (creates both topics, verifies config).
 
 **Verify the configuration:**
 
@@ -109,14 +109,12 @@ kafka-topics --describe --topic orders-safe
 
 **Task:** See what happens when a broker fails.
 
-Run [`src/mod-01/lab1-replication.sh`](src/mod-01/lab1-replication.sh) to produce test messages and verify the setup, then simulate a broker failure:
+Run [`src/mod-01/lab1/replication.sh`](src/mod-01/lab1/replication.sh) to produce test messages and verify the setup, then simulate a broker failure:
 
 ```bash
 docker stop broker-X  # replace X with the broker number holding Partition 0
-kafka-topics --describe --topic orders-unsafe | grep "Partition: 0"
-docker start broker-X
-sleep 10
-kafka-topics --describe --topic orders-safe
+kafka-topics --describe --topic orders-unsafe
+docker start broker-X; watch -c -d -n 1 kafka-topics --describe
 ```
 
 **Questions to Answer:**
@@ -187,10 +185,10 @@ Step 4: Add 30% headroom = ___ × 1.3 = ___ partitions (round up)
 
 ### Exercise 2.2: Create a Properly Partitioned Topic
 
-Covered by [`src/mod-01/lab2-partitions.sh`](src/mod-01/lab2-partitions.sh) (creates topic, verifies distribution, produces 10 messages, consumes with partition visibility):
+Covered by [`src/mod-01/lab2/partitions.sh`](src/mod-01/lab2/partitions.sh) (creates topic, verifies distribution, produces 10 messages, consumes with partition visibility):
 
 ```bash
-bash src/mod-01/lab2-partitions.sh YOUR_CALCULATED_NUMBER
+bash src/mod-01/lab2/partitions.sh YOUR_CALCULATED_NUMBER
 ```
 
 **Questions to Answer:**
@@ -203,7 +201,7 @@ bash src/mod-01/lab2-partitions.sh YOUR_CALCULATED_NUMBER
 
 ### Exercise 2.3: Observe Partition Assignment
 
-Covered by sections "Produce 10 test messages" and "Consume with partition visibility" in [`src/mod-01/lab2-partitions.sh`](src/mod-01/lab2-partitions.sh).
+Covered by sections "Produce 10 test messages" and "Consume with partition visibility" in [`src/mod-01/lab2/partitions.sh`](src/mod-01/lab2/partitions.sh).
 
 **Questions to Answer:**
 
@@ -242,7 +240,7 @@ Covered by sections "Produce 10 test messages" and "Consume with partition visib
 
 **Pattern 1: Analytics Topic (Time-Series Data)**
 
-Covered by section "Analytics topic" in [`src/mod-01/lab3-config-patterns.sh`](src/mod-01/lab3-config-patterns.sh).
+Covered by section "Analytics topic" in [`src/mod-01/lab3/config-patterns.sh`](src/mod-01/lab3/config-patterns.sh).
 
 **Use Case:** Clickstream data, logs, metrics
 **Retention:** 30 days (2,592,000,000 ms)
@@ -252,7 +250,7 @@ Covered by section "Analytics topic" in [`src/mod-01/lab3-config-patterns.sh`](s
 
 **Pattern 2: State Topic (Compaction)**
 
-Covered by section "State topic" in [`src/mod-01/lab3-config-patterns.sh`](src/mod-01/lab3-config-patterns.sh).
+Covered by section "State topic" in [`src/mod-01/lab3/config-patterns.sh`](src/mod-01/lab3/config-patterns.sh).
 
 **Use Case:** User profiles, inventory state, configuration
 **Compaction:** Keeps only the latest update per key
@@ -262,7 +260,7 @@ Covered by section "State topic" in [`src/mod-01/lab3-config-patterns.sh`](src/m
 
 **Pattern 3: Audit Log (Compliance)**
 
-Covered by section "Audit log" in [`src/mod-01/lab3-config-patterns.sh`](src/mod-01/lab3-config-patterns.sh).
+Covered by section "Audit log" in [`src/mod-01/lab3/config-patterns.sh`](src/mod-01/lab3/config-patterns.sh).
 
 **Use Case:** Financial transactions, compliance logs, legal records
 **Retention:** 90 days
@@ -273,7 +271,7 @@ Covered by section "Audit log" in [`src/mod-01/lab3-config-patterns.sh`](src/mod
 
 ### Exercise 3.2: Verify and Compare Configurations
 
-Covered by section "Verify each topic's configuration" in [`src/mod-01/lab3-config-patterns.sh`](src/mod-01/lab3-config-patterns.sh).
+Covered by section "Verify each topic's configuration" in [`src/mod-01/lab3/config-patterns.sh`](src/mod-01/lab3/config-patterns.sh).
 
 **Questions to Answer:**
 
@@ -286,7 +284,7 @@ Covered by section "Verify each topic's configuration" in [`src/mod-01/lab3-conf
 
 ### Exercise 3.3: Test Compaction Behavior (Advanced)
 
-Covered by section "Compaction behaviour test" in [`src/mod-01/lab3-config-patterns.sh`](src/mod-01/lab3-config-patterns.sh).
+Covered by section "Compaction behaviour test" in [`src/mod-01/lab3/config-patterns.sh`](src/mod-01/lab3/config-patterns.sh).
 
 ---
 

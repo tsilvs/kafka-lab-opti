@@ -18,3 +18,5 @@ kafka-configs() { docker exec broker-1 kafka-configs --bootstrap-server "$BOOTST
 # so it is appended after the caller's arguments (always call this function
 # with --producer-props as the last option group).
 kafka-producer-perf-test() { docker exec broker-1 kafka-producer-perf-test "$@" bootstrap.servers="$BOOTSTRAP"; }
+
+export -f kafka-topics kafka-console-producer kafka-console-consumer kafka-consumer-groups kafka-configs kafka-producer-perf-test

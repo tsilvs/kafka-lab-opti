@@ -3,9 +3,12 @@ services:
     image: confluentinc/cp-kafka:8.2.2
     hostname: broker-1
     container_name: broker-1
+    mem_limit: ${BROKER_MEM_LIMIT:-1g}
     ports:
       - "9092:9092"
     environment:
+      # JVM heap cap; container total capped by mem_limit (page cache etc.)
+      KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS:--Xms256m -Xmx512m}
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@broker-1:29093,2@broker-2:29093,3@broker-3:29093'
@@ -22,9 +25,12 @@ services:
     image: confluentinc/cp-kafka:8.2.2
     hostname: broker-2
     container_name: broker-2
+    mem_limit: ${BROKER_MEM_LIMIT:-1g}
     ports:
       - "9093:9093"
     environment:
+      # JVM heap cap; container total capped by mem_limit (page cache etc.)
+      KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS:--Xms256m -Xmx512m}
       KAFKA_NODE_ID: 2
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@broker-1:29093,2@broker-2:29093,3@broker-3:29093'
@@ -41,9 +47,12 @@ services:
     image: confluentinc/cp-kafka:8.2.2
     hostname: broker-3
     container_name: broker-3
+    mem_limit: ${BROKER_MEM_LIMIT:-1g}
     ports:
       - "9094:9094"
     environment:
+      # JVM heap cap; container total capped by mem_limit (page cache etc.)
+      KAFKA_HEAP_OPTS: ${KAFKA_HEAP_OPTS:--Xms256m -Xmx512m}
       KAFKA_NODE_ID: 3
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@broker-1:29093,2@broker-2:29093,3@broker-3:29093'

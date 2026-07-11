@@ -22,6 +22,12 @@ Complete command-line reference for every exercise across all three modules, org
 
 **[→ View Command Reference](command-reference.md)**
 
+### **[Concept Diagrams](diagrams.md)** 📊
+
+Mermaid diagrams: topic/partition/replica layout, producer partitioning, ISR/acks flow, consumer group assignment, consumer lag.
+
+**[→ View Diagrams](diagrams.md)**
+
 ---
 
 ## 🎯 Learning Path
