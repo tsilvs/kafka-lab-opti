@@ -2,15 +2,20 @@
 # Module 1 - Exercises 3.1-3.3: Topic Configuration Best Practices
 # Creates the three production configuration patterns, verifies them, and
 # runs the compaction behaviour test.
-source "$(cd "$(dirname "$0")" && pwd)/../kafka-env.sh"
+source "$(cd "$(dirname "$0")" && pwd)/../../kafka-env.sh"
 
-# --- Section 1: Analytics topic (time-series, delete after 30 days) ---
+# --- Section 1: Analytics topic (time-series)
+
+# delete after 7 days
+# segment after 1G
+# If 1G accumulates for longer than 7 days, segment is retained until filled
+
 kafka-topics --create \
 	--topic clickstream-events \
 	--partitions 20 \
-	--replication-factor 3 \
+	--replication-factor 1 \
 	--config min.insync.replicas=2 \
-	--config retention.ms=2592000000 \
+	--config retention.ms=604800000 \
 	--config segment.bytes=1073741824 \
 	--config compression.type=lz4 \
 	--config cleanup.policy=delete
@@ -19,7 +24,7 @@ kafka-topics --create \
 kafka-topics --create \
 	--topic user-profiles \
 	--partitions 12 \
-	--replication-factor 3 \
+	--replication-factor 2 \
 	--config min.insync.replicas=2 \
 	--config cleanup.policy=compact \
 	--config segment.bytes=104857600 \

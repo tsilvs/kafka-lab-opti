@@ -242,8 +242,8 @@ Covered by sections "Produce 10 test messages" and "Consume with partition visib
 
 Covered by section "Analytics topic" in [`src/mod-01/lab3/config-patterns.sh`](src/mod-01/lab3/config-patterns.sh).
 
-**Use Case:** Clickstream data, logs, metrics
-**Retention:** 30 days (2,592,000,000 ms)
+**Use Case:** Clickstream data, logs, metrics  
+**Retention:** 30 days (2,592,000,000 ms)  
 **Why:** Data becomes less valuable over time, delete to save space
 
 ---
@@ -252,8 +252,8 @@ Covered by section "Analytics topic" in [`src/mod-01/lab3/config-patterns.sh`](s
 
 Covered by section "State topic" in [`src/mod-01/lab3/config-patterns.sh`](src/mod-01/lab3/config-patterns.sh).
 
-**Use Case:** User profiles, inventory state, configuration
-**Compaction:** Keeps only the latest update per key
+**Use Case:** User profiles, inventory state, configuration  
+**Compaction:** Keeps only the latest update per key  
 **Why:** You only care about current state, not history
 
 ---
@@ -262,9 +262,9 @@ Covered by section "State topic" in [`src/mod-01/lab3/config-patterns.sh`](src/m
 
 Covered by section "Audit log" in [`src/mod-01/lab3/config-patterns.sh`](src/mod-01/lab3/config-patterns.sh).
 
-**Use Case:** Financial transactions, compliance logs, legal records
-**Retention:** 90 days
-**Durability:** `min.insync.replicas=3` (all replicas must ack)
+**Use Case:** Financial transactions, compliance logs, legal records  
+**Retention:** 90 days  
+**Durability:** `min.insync.replicas=3` (all replicas must ack)  
 **Why:** Regulatory requirements, zero tolerance for data loss
 
 ---
